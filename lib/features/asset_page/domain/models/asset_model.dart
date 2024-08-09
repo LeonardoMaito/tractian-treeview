@@ -1,18 +1,25 @@
 import 'component_model.dart';
+import 'i_asset.dart';
 
-class AssetModel {
+class AssetModel implements IAsset {
+  @override
   final String id;
+
+  @override
   final String name;
+
+  @override
   final String? locationId;
+
+  @override
   final String? parentId;
-  final List<AssetModel> subAssets;
-  final List<ComponentModel> components;
+
+  final List<IAsset> subAssets;
 
   AssetModel({
     required this.id,
     required this.name,
     this.subAssets = const [],
-    this.components = const [],
     this.locationId,
     this.parentId,
   });
@@ -25,11 +32,16 @@ class AssetModel {
         parentId: json['parentId']);
   }
 
-  void addSubAsset(AssetModel subAsset) {
-    subAssets.add(subAsset);
-  }
-
-  void addComponent(ComponentModel component) {
-    components.add(component);
+  AssetModel copyWith({
+    List<AssetModel>? subAssets,
+  }) {
+    return AssetModel(
+      id: id,
+      name: name,
+      locationId: locationId,
+      parentId: parentId,
+      subAssets: subAssets ?? this.subAssets,
+    );
   }
 }
+
