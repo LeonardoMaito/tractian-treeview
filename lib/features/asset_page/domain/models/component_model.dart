@@ -1,11 +1,21 @@
 
-class ComponentModel {
+import 'i_asset.dart';
+
+class ComponentModel implements IAsset {
+  @override
   final String id;
+
+  @override
   final String name;
-  final String sensorType;
+
+  @override
   final String? locationId;
+
+  @override
   final String? parentId;
+
   final String status;
+  final String sensorType;
 
   ComponentModel({
     required this.id,
