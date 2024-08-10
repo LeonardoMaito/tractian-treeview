@@ -19,7 +19,14 @@ class LocationModel {
         parentId: json['parentId']);
   }
 
-  void addSubLocation(LocationModel subLocation) {
-    subLocations.add(subLocation);
+  LocationModel copyWith({
+    List<LocationModel>? subLocations,
+  }) {
+    return LocationModel(
+      id: id,
+      name: name,
+      parentId: parentId,
+      subLocations: subLocations ?? this.subLocations,
+    );
   }
 }
