@@ -32,16 +32,14 @@ void main() {
       "parentId": "65674204664c41001e91ecb4"
     };
 
-
     final jaguarLocation = LocationModel.fromJson(jaguarLocationJson);
     final jaguarLocationTwo = LocationModel.fromJson(jaguarLocationTwoJson);
 
-    if(jaguarLocationTwo.parentId == jaguarLocation.id){
-      final newSubLocationList = List<LocationModel>.from(jaguarLocation.subLocations)
-        ..add(jaguarLocationTwo);
-      final updatedJaguarAsset = jaguarLocation.copyWith(subLocations: newSubLocationList);
-      expect(updatedJaguarAsset.subLocations.length, 1);
-      expect(updatedJaguarAsset.subLocations.first.id, jaguarLocationTwo.id);
-    }
+    final newSubLocationList = List<LocationModel>.from(jaguarLocation.subLocations)
+      ..add(jaguarLocationTwo);
+    final updatedJaguarAsset = jaguarLocation.copyWith(subLocations: newSubLocationList);
+    expect(updatedJaguarAsset.subLocations.length, 1);
+    expect(updatedJaguarAsset.subLocations.first.id, jaguarLocationTwo.id);
+
   });
 }
