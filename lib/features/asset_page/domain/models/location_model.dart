@@ -1,15 +1,19 @@
 
+import 'asset_model.dart';
+
 class LocationModel {
   final String name;
   final String id;
   final String? parentId;
-  List<LocationModel> subLocations;
+  final List<LocationModel> subLocations;
+  final List<AssetModel> assets;
 
   LocationModel({
     required this.id,
     required this.name,
     this.parentId,
     this.subLocations = const [],
+    this.assets = const [],
   });
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
@@ -21,12 +25,14 @@ class LocationModel {
 
   LocationModel copyWith({
     List<LocationModel>? subLocations,
+    List<AssetModel>? assets,
   }) {
     return LocationModel(
       id: id,
       name: name,
       parentId: parentId,
       subLocations: subLocations ?? this.subLocations,
+      assets: assets ?? this.assets,
     );
   }
 }
