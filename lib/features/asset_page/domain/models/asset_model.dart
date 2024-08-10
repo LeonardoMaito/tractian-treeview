@@ -15,11 +15,13 @@ class AssetModel implements IAsset {
   final String? parentId;
 
   final List<IAsset> subAssets;
+  final List<ComponentModel> components;
 
   AssetModel({
     required this.id,
     required this.name,
     this.subAssets = const [],
+    this.components = const [],
     this.locationId,
     this.parentId,
   });
@@ -34,6 +36,7 @@ class AssetModel implements IAsset {
 
   AssetModel copyWith({
     List<AssetModel>? subAssets,
+    List<ComponentModel>? components,
   }) {
     return AssetModel(
       id: id,
@@ -41,6 +44,7 @@ class AssetModel implements IAsset {
       locationId: locationId,
       parentId: parentId,
       subAssets: subAssets ?? this.subAssets,
+      components: components ?? this.components,
     );
   }
 }
