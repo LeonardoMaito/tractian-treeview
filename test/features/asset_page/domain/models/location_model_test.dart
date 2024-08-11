@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:treeview/features/asset_page/domain/models/location_model.dart';
+import 'package:treeview/features/asset_page/domain/models/location/location_model.dart';
 
 void main() {
   test('Create LocationModel from JSON', (){
@@ -35,11 +35,10 @@ void main() {
     final jaguarLocation = LocationModel.fromJson(jaguarLocationJson);
     final jaguarLocationTwo = LocationModel.fromJson(jaguarLocationTwoJson);
 
-    final newSubLocationList = List<LocationModel>.from(jaguarLocation.subLocations)
-      ..add(jaguarLocationTwo);
-    final updatedJaguarAsset = jaguarLocation.copyWith(subLocations: newSubLocationList);
-    expect(updatedJaguarAsset.subLocations.length, 1);
-    expect(updatedJaguarAsset.subLocations.first.id, jaguarLocationTwo.id);
+    jaguarLocation.addSubLocation(jaguarLocationTwo);
+
+    expect(jaguarLocation.subLocations.length, 1);
+    expect(jaguarLocation.subLocations.first.id, jaguarLocationTwo.id);
 
   });
 }

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:treeview/features/asset_page/domain/models/asset_model.dart';
-import 'package:treeview/features/asset_page/domain/models/component_model.dart';
+import 'package:treeview/features/asset_page/domain/models/assets/asset_model.dart';
+import 'package:treeview/features/asset_page/domain/models/assets/component_model.dart';
 
 void main() {
     test('Create AssetModel from JSON', (){
@@ -44,11 +44,10 @@ void main() {
       final jaguarAsset = AssetModel.fromJson(jaguarAssetJson);
       final jaguarAssetTwo = AssetModel.fromJson(jaguarAssetTwoJson);
 
-      final newSubAssetList = List<AssetModel>.from(jaguarAsset.subAssets)
-        ..add(jaguarAssetTwo);
-      final updatedJaguarAsset = jaguarAsset.copyWith(subAssets: newSubAssetList);
-      expect(updatedJaguarAsset.subAssets.length, 1);
-      expect(updatedJaguarAsset.subAssets.first.id, jaguarAssetTwo.id);
+      jaguarAsset.addSubAsset(jaguarAssetTwo);
+
+      expect(jaguarAsset.subAssets.length, 1);
+      expect(jaguarAsset.subAssets.first.id, jaguarAssetTwo.id);
 
     });
 
@@ -75,11 +74,10 @@ void main() {
       final jaguarAsset = AssetModel.fromJson(jaguarAssetJson);
       final jaguarAssetTwo = ComponentModel.fromJson(jaguarAssetTwoJson);
 
-      final newComponentList = List<ComponentModel>.from(jaguarAsset.components)
-          ..add(jaguarAssetTwo);
-      final updatedJaguarAsset = jaguarAsset.copyWith(components: newComponentList);
-      expect(updatedJaguarAsset.components.length, 1);
-      expect(updatedJaguarAsset.components.first.id, jaguarAssetTwo.id);
+      jaguarAsset.addComponent(jaguarAssetTwo);
+
+      expect(jaguarAsset.components.length, 1);
+      expect(jaguarAsset.components.first.id, jaguarAssetTwo.id);
 
     });
 }

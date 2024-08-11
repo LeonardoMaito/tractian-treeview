@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:treeview/features/asset_page/domain/models/component_model.dart';
+import 'package:treeview/features/asset_page/domain/models/assets/component_model.dart';
 
 void main() {
   test('Create ComponentModel from JSON', (){
