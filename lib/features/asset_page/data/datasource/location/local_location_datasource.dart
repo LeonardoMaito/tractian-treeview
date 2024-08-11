@@ -1,5 +1,5 @@
 import 'package:treeview/features/asset_page/data/datasource/location/location_datasource.dart';
-import 'package:treeview/features/asset_page/domain/models/location_model.dart';
+import 'package:treeview/features/asset_page/domain/models/location/location_model.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 

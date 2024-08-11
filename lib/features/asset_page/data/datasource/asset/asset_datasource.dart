@@ -1,5 +1,5 @@
-import 'package:treeview/features/asset_page/domain/models/i_asset.dart';
+import 'package:treeview/features/asset_page/domain/entities/asset_entity.dart';
 
 abstract class AssetDataSource {
-  Future<List<IAsset>> getAssets();
+  Future<List<AssetEntity>> getAssets();
 }

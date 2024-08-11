@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import '../../../domain/models/asset_model.dart';
-import '../../../domain/models/component_model.dart';
-import '../../../domain/models/i_asset.dart';
+import 'package:treeview/features/asset_page/domain/entities/asset_entity.dart';
+import '../../../domain/models/assets/asset_model.dart';
+import '../../../domain/models/assets/component_model.dart';
 import 'asset_datasource.dart';
 
 class LocalAssetDataSource implements AssetDataSource {
@@ -11,10 +11,10 @@ class LocalAssetDataSource implements AssetDataSource {
   LocalAssetDataSource(this.path);
 
   @override
-  Future<List<IAsset>> getAssets() async {
+  Future<List<AssetEntity>> getAssets() async {
     final jsonString = await rootBundle.loadString(path);
     final List<dynamic> jsonData = json.decode(jsonString);
-    return jsonData.map<IAsset>((item) {
+    return jsonData.map<AssetEntity>((item) {
       if (item['sensorType'] != null) {
         return ComponentModel.fromJson(item);
       } else {
