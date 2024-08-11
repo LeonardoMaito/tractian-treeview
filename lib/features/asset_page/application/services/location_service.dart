@@ -1,5 +1,5 @@
 import 'package:treeview/features/asset_page/data/repository/location/location_repository_impl.dart';
-import 'package:treeview/features/asset_page/domain/models/location_model.dart';
+import 'package:treeview/features/asset_page/domain/models/location/location_model.dart';
 
 class LocationService {
   final LocationRepositoryImpl locationRepository;
@@ -9,20 +9,18 @@ class LocationService {
   Future<List<LocationModel>> categorizeLocationsAndSubLocations() async {
     List<LocationModel> locations = await locationRepository.getLocations();
 
-    Map<String, List<LocationModel>> subLocationsMap = {};
+    Map<String, LocationModel> locationMap = {
+      for (var location in locations) location.id: location
+    };
 
-    for (LocationModel location in locations) {
-      if (location.parentId != null) {
-        subLocationsMap.putIfAbsent(location.parentId!, () => []).add(location);
+    for (var location in locations) {
+      if (location.parentId != null && locationMap.containsKey(location.parentId)) {
+        locationMap[location.parentId]!.addSubLocation(location);
       }
     }
 
-    for (int i = 0; i < locations.length; i++) {
-      LocationModel location = locations[i];
-      if (subLocationsMap.containsKey(location.id)) {
-        locations[i] = location.copyWith(subLocations: subLocationsMap[location.id]!);
-      }
-    }
-    return locations;
+    List<LocationModel> rootLocations = locations.where((location) => location.parentId == null).toList();
+
+    return rootLocations;
   }
 }
