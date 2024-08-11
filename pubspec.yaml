@@ -58,8 +58,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/jaguar/assets.json
-    - assets/jaguar/locations.json
+    - assets/jaguar/
+    - assets/tobias/
+    - assets/apex/
+    - assets/companies/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
