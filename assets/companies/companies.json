@@ -1,0 +1,21 @@
+[
+  {
+    "id": "1",
+    "name": "APEX",
+    "assetPath": "assets/apex/assets.json",
+    "locationPath": "assets/apex/locations.json"
+  },
+  {
+    "id": "2",
+    "name": "JAGUAR",
+    "assetPath": "assets/jaguar/assets.json",
+    "locationPath": "assets/jaguar/locations.json"
+  },
+  {
+    "id": "3",
+    "name": "TOBIAS",
+    "assetPath": "assets/tobias/assets.json",
+    "locationPath": "assets/tobias/locations.json"
+  }
+]
+
