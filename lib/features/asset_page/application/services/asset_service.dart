@@ -1,10 +1,10 @@
-import 'package:treeview/features/asset_page/data/repository/asset/asset_repository_impl.dart';
 import 'package:treeview/features/asset_page/domain/entities/asset_entity.dart';
 import '../../domain/models/assets/asset_model.dart';
 import '../../domain/models/assets/component_model.dart';
+import '../../domain/repository/asset_repository.dart';
 
 class AssetService{
-  final AssetRepositoryImpl assetRepository;
+  final AssetRepository assetRepository;
 
   AssetService(this.assetRepository);
 

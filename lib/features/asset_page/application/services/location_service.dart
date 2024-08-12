@@ -1,8 +1,8 @@
-import 'package:treeview/features/asset_page/data/repository/location/location_repository_impl.dart';
 import 'package:treeview/features/asset_page/domain/models/location/location_model.dart';
+import '../../domain/repository/location_repository.dart';
 
 class LocationService {
-  final LocationRepositoryImpl locationRepository;
+  final LocationRepository locationRepository;
 
   LocationService(this.locationRepository);
 
