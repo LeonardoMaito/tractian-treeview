@@ -1,21 +1,21 @@
 [
   {
     "id": "1",
-    "name": "APEX",
-    "assetPath": "assets/apex/assets.json",
-    "locationPath": "assets/apex/locations.json"
-  },
-  {
-    "id": "2",
-    "name": "JAGUAR",
+    "name": "Jaguar Unit",
     "assetPath": "assets/jaguar/assets.json",
     "locationPath": "assets/jaguar/locations.json"
   },
   {
-    "id": "3",
-    "name": "TOBIAS",
+    "id": "2",
+    "name": "Tobias Unit",
     "assetPath": "assets/tobias/assets.json",
     "locationPath": "assets/tobias/locations.json"
+  },
+  {
+    "id": "3",
+    "name": "Apex Unit",
+    "assetPath": "assets/apex/assets.json",
+    "locationPath": "assets/apex/locations.json"
   }
 ]
 
