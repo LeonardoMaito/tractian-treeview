@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:treeview/features/home_page/presentation/pages/home_page.dart';
+
+import 'features/utils/theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -10,13 +14,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Tractian TreeView',
-      theme: ThemeData(
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const Placeholder(),
+      theme: CustomTheme.customTheme,
+      home: const HomePage(),
     );
   }
 }
