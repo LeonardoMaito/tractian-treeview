@@ -28,8 +28,12 @@ class _AssetPageState extends State<AssetPage> {
   void initState() {
     AssetPageBindings().init(widget.company);
     assetLocationStore = GetIt.I.get<AssetLocationStore>();
-    assetLocationStore.loadAssetsAndLocations();
+    loadAssetsAndLocations();
     super.initState();
+  }
+
+  Future<void> loadAssetsAndLocations() async{
+    await assetLocationStore.loadAssetsAndLocations();
   }
 
   @override
@@ -45,6 +49,7 @@ class _AssetPageState extends State<AssetPage> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           child: Column(
             children: [
               SearchField(
@@ -82,18 +87,18 @@ class _AssetPageState extends State<AssetPage> {
                 thickness: 2,
               ),
               SizedBox(
-                height: double.maxFinite,
+                height: 700,
                 child: Observer(
                   builder: (_) {
-                    return ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: assetLocationStore.filteredEntities.length,
-                      itemBuilder: (context, index) {
-                        final entity = assetLocationStore.filteredEntities[index];
-                        return _buildEntityItem(entity);
-                      },
-                    );
-                  },
+                      return ListView.builder(
+                        itemCount: assetLocationStore.filteredEntities.length,
+                        itemBuilder: (context, index) {
+                          final entity =
+                              assetLocationStore.filteredEntities[index];
+                          return _buildEntityItem(entity);
+                        },
+                      );
+                    }
                 ),
               ),
             ],
@@ -105,18 +110,16 @@ class _AssetPageState extends State<AssetPage> {
 
   Widget _buildEntityItem(BaseEntity entity) {
     if (entity is ComponentModel) {
-      return ListTile(
+      return CustomExpansionTile(
         leading: Image.asset('assets/icons/component.png'),
-        title: Row(
-          children: [
-            Text(entity.name),
-            const SizedBox(width: 5),
-            if (entity.status == ComponentStatus.alert)
-              const Icon(Icons.circle, color: Colors.red, size: 12),
-            if (entity.sensorType == ComponentType.energy)
-              const Icon(Icons.bolt, color: Colors.green, size: 12),
-          ],
-        ),
+        title: entity.name,
+        expandable: false,
+        additionalIcons: [
+          if (entity.sensorType == ComponentType.energy)
+            const Icon(Icons.bolt, color: Colors.green, size: 24),
+          if (entity.status == ComponentStatus.alert)
+            const Icon(Icons.circle, color: Colors.red, size: 18),
+        ],
       );
     } else if (entity is AssetModel) {
       return CustomExpansionTile(
@@ -132,12 +135,12 @@ class _AssetPageState extends State<AssetPage> {
         leading: Image.asset('assets/icons/location.png'),
         title: entity.name,
         children: [
-          ...entity.subLocations.map((subLocation) => _buildEntityItem(subLocation)),
+          ...entity.subLocations
+              .map((subLocation) => _buildEntityItem(subLocation)),
           ...entity.assets.map((asset) => _buildEntityItem(asset)),
         ],
       );
     }
-    return const SizedBox.shrink(); // Fallback para casos não identificados
+    return const SizedBox.shrink();
   }
-
 }
