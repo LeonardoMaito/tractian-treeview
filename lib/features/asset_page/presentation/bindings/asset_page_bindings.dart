@@ -30,4 +30,20 @@ class AssetPageBindings{
     i.registerFactory<AssetLocationStore>(() => AssetLocationStore(i<AssetLocationService>()));
 
   }
+
+  void dispose() {
+      i.unregister<AssetLocationStore>();
+
+      i.unregister<AssetLocationService>();
+      i.unregister<AssetService>();
+      i.unregister<LocationService>();
+
+
+      i.unregister<AssetRepository>();
+      i.unregister<LocationRepository>();
+
+      i.unregister<AssetDataSource>();
+      i.unregister<LocationDataSource>();
+
+  }
 }
