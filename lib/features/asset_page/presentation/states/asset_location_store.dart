@@ -1,7 +1,7 @@
 import 'package:mobx/mobx.dart';
 import 'package:treeview/features/asset_page/application/services/asset_location_service.dart';
 import 'package:treeview/features/asset_page/domain/entities/base_entity.dart';
-import '../../domain/models/assets/component_model.dart';
+import 'package:treeview/features/utils/filter_helper.dart';
 
 part 'asset_location_store.g.dart';
 
@@ -51,48 +51,24 @@ abstract class _AssetLocationStore with Store{
 
     if (searchTerm.isNotEmpty) {
       filtered = filtered.where((entity) {
-        return entity.name.toLowerCase().contains(searchTerm.toLowerCase());
+        return FilterHelper.searchInEntity(entity, searchTerm);
       }).toList();
     }
 
     if (filterEnergySensors) {
       filtered = filtered.where((entity) {
-        if (entity is ComponentModel) {
-          return entity.sensorType == ComponentType.energy;
-        }
-        return true;
+        return FilterHelper.hasEnergySensor(entity);
       }).toList();
     }
 
     if (filterCriticalStatus) {
       filtered = filtered.where((entity) {
-        if (entity is ComponentModel) {
-          return entity.status == ComponentStatus.alert;
-        }
-        return true;
+        return FilterHelper.hasCriticalStatus(entity);
       }).toList();
     }
 
     //This is so that the parent entities, or the hierarchy path
     //is also included when getting the list of entities
-    return ObservableList.of(_includeParentEntities(filtered));
-  }
-
-  List<BaseEntity> _includeParentEntities(List<BaseEntity> filteredEntities) {
-    Set<BaseEntity> entitiesWithParents = filteredEntities.toSet();
-
-    for (var entity in filteredEntities) {
-      var parent = _findParentEntity(entity);
-      while (parent != null) {
-        entitiesWithParents.add(parent);
-        parent = _findParentEntity(parent);
-      }
-    }
-
-    return entitiesWithParents.toList();
-  }
-
-  BaseEntity? _findParentEntity(BaseEntity entity) {
-    return entities.firstWhere((e) => e.id == entity.parentId);
+    return ObservableList.of(FilterHelper.includeParentEntities(filtered, entities));
   }
 }
