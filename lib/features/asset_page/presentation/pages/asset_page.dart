@@ -46,66 +46,65 @@ class _AssetPageState extends State<AssetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              SearchField(
-                onChanged: (text) {
-                  assetLocationStore.setSearchTerm(text);
-                },
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SearchField(
+              onChanged: (text) {
+                assetLocationStore.setSearchTerm(text);
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                      flex: 0,
+                      child: FilterButton(
+                          onPressed: () {
+                            assetLocationStore.toggleEnergySensorsFilter();
+                          },
+                          icon: Icons.bolt,
+                          text: 'Sensor de Energia')),
+                  const SizedBox(width: 15),
+                  Flexible(
+                      flex: 0,
+                      child: FilterButton(
+                          onPressed: () {
+                            assetLocationStore.toggleCriticalStatusFilter();
+                          },
+                          icon: Icons.error_outline,
+                          text: 'Crítico')),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                        flex: 0,
-                        child: FilterButton(
-                            onPressed: () {
-                              assetLocationStore.toggleEnergySensorsFilter();
-                            },
-                            icon: Icons.bolt,
-                            text: 'Sensor de Energia')),
-                    const SizedBox(width: 15),
-                    Flexible(
-                        flex: 0,
-                        child: FilterButton(
-                            onPressed: () {
-                              assetLocationStore.toggleCriticalStatusFilter();
-                            },
-                            icon: Icons.error_outline,
-                            text: 'Crítico')),
-                  ],
-                ),
+            ),
+            Divider(
+              color: Colors.grey[300],
+              thickness: 2,
+            ),
+            SizedBox(
+              height: 600,
+              child: Observer(
+                builder: (_) {
+
+                  if (assetLocationStore.isLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                    return ListView.builder(
+                      padding: const EdgeInsets.symmetric(vertical: 15.0),
+                      itemCount: assetLocationStore.filteredEntities.length,
+                      itemBuilder: (context, index) {
+                        final entity = assetLocationStore.filteredEntities[index];
+                        return _buildEntityItem(entity);
+                      },
+                    );
+                  }
               ),
-              Divider(
-                color: Colors.grey[300],
-                thickness: 2,
-              ),
-              SizedBox(
-                height: 700,
-                child: Observer(
-                  builder: (_) {
-                    if (assetLocationStore.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                      return ListView.builder(
-                        itemCount: assetLocationStore.filteredEntities.length,
-                        itemBuilder: (context, index) {
-                          final entity =
-                              assetLocationStore.filteredEntities[index];
-                          return _buildEntityItem(entity);
-                        },
-                      );
-                    }
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
