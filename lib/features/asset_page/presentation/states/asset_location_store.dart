@@ -7,7 +7,7 @@ part 'asset_location_store.g.dart';
 
 class AssetLocationStore = _AssetLocationStore with _$AssetLocationStore;
 
-abstract class _AssetLocationStore with Store{
+abstract class _AssetLocationStore with Store {
   final AssetLocationService assetLocationService;
 
   _AssetLocationStore(this.assetLocationService);
@@ -47,7 +47,7 @@ abstract class _AssetLocationStore with Store{
 
   @computed
   ObservableList<BaseEntity> get filteredEntities {
-    List<BaseEntity> filtered = entities;
+    List<BaseEntity> filtered = entities.toList();
 
     if (searchTerm.isNotEmpty) {
       filtered = filtered.where((entity) {
@@ -56,19 +56,15 @@ abstract class _AssetLocationStore with Store{
     }
 
     if (filterEnergySensors) {
-      filtered = filtered.where((entity) {
-        return FilterHelper.hasEnergySensor(entity);
-      }).toList();
+      filtered = FilterHelper.filterByEnergySensor(filtered);
     }
 
     if (filterCriticalStatus) {
-      filtered = filtered.where((entity) {
-        return FilterHelper.hasCriticalStatus(entity);
-      }).toList();
+      filtered = FilterHelper.filterByCriticalStatus(filtered);
     }
 
-    //This is so that the parent entities, or the hierarchy path
-    //is also included when getting the list of entities
-    return ObservableList.of(FilterHelper.includeParentEntities(filtered, entities));
+    filtered = FilterHelper.includeParentEntities(filtered, entities);
+
+    return ObservableList.of(filtered);
   }
 }
