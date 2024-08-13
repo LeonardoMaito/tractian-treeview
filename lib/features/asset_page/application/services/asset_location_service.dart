@@ -1,6 +1,7 @@
 import 'package:treeview/features/asset_page/application/services/asset_service.dart';
 import 'package:treeview/features/asset_page/application/services/location_service.dart';
 import 'package:treeview/features/asset_page/domain/entities/base_entity.dart';
+import '../../../utils/filter_helper.dart';
 import '../../domain/entities/asset_entity.dart';
 import '../../domain/models/location/location_model.dart';
 
@@ -36,6 +37,12 @@ class AssetLocationService {
     categorizedEntities.addAll(locations);
 
     categorizedEntities.addAll(unassignedAssets);
+
+    categorizedEntities.sort((a, b) {
+      int aHasChildren = FilterHelper.hasChildren(a) ? 0 : 1;
+      int bHasChildren = FilterHelper.hasChildren(b) ? 0 : 1;
+      return aHasChildren.compareTo(bHasChildren);
+    });
 
     return categorizedEntities;
   }
