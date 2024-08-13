@@ -49,7 +49,7 @@ class _AssetPageState extends State<AssetPage> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           child: Column(
             children: [
               SearchField(
