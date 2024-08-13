@@ -10,9 +10,13 @@ class LocalLocationDatasource extends LocationDataSource {
 
   @override
   Future<List<LocationModel>> getLocations() async {
-    final jsonString = await rootBundle.loadString(path);
-    final List<dynamic> jsonData = json.decode(jsonString);
-    return jsonData.map((item) => LocationModel.fromJson(item)).toList();
+    try {
+      final jsonString = await rootBundle.loadString(path);
+      final List<dynamic> jsonData = json.decode(jsonString);
+      return jsonData.map((item) => LocationModel.fromJson(item)).toList();
+    } catch(e) {
+      throw Exception('Erro ao buscar locais: $e');
+    }
   }
 
 }

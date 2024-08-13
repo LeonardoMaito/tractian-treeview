@@ -10,8 +10,12 @@ class LocalCompanyDatasource implements CompanyDatasource {
 
   @override
   Future<List<CompanyModel>> getCompanies() async {
-    final jsonString = await rootBundle.loadString(path);
-    final List<dynamic> jsonData = json.decode(jsonString);
-    return jsonData.map((item) => CompanyModel.fromJson(item)).toList();
+    try {
+      final jsonString = await rootBundle.loadString(path);
+      final List<dynamic> jsonData = json.decode(jsonString);
+      return jsonData.map((item) => CompanyModel.fromJson(item)).toList();
+    } catch(e) {
+      throw Exception('Erro ao buscar empresas: $e');
+    }
   }
 }

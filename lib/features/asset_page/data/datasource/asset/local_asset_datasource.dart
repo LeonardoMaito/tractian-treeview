@@ -12,14 +12,19 @@ class LocalAssetDataSource implements AssetDataSource {
 
   @override
   Future<List<AssetEntity>> getAssets() async {
-    final jsonString = await rootBundle.loadString(path);
-    final List<dynamic> jsonData = json.decode(jsonString);
-    return jsonData.map<AssetEntity>((item) {
-      if (item['sensorType'] != null) {
-        return ComponentModel.fromJson(item);
-      } else {
-        return AssetModel.fromJson(item);
-      }
-    }).toList();
+    try {
+      final jsonString = await rootBundle.loadString(path);
+      final List<dynamic> jsonData = json.decode(jsonString);
+      return jsonData.map<AssetEntity>((item) {
+        if (item['sensorType'] != null) {
+          return ComponentModel.fromJson(item);
+        } else {
+          return AssetModel.fromJson(item);
+        }
+      }).toList();
+    } catch(e){
+      throw Exception('Erro ao buscar ativos: $e');
+
+    }
   }
 }
