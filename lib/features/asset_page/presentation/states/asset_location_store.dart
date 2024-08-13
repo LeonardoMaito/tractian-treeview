@@ -29,19 +29,16 @@ abstract class _AssetLocationStore with Store {
 
   @action
   Future<void> loadAssetsAndLocations() async {
-    print('Loading started');
-    isLoading = true;  // Ativa o estado de carregamento
+    isLoading = true;
 
     try {
       final loadedAssets = await assetLocationService.buildEntityHierarchy();
-      print('Loading completed');
       entities.clear();
       entities.addAll(loadedAssets);
     } catch (e) {
-      print('Error: $e');
+      throw Exception('Error loading assets: $e');
     } finally {
-      isLoading = false;  // Desativa o estado de carregamento após a conclusão
-      print('Loading flag set to false');
+      isLoading = false;
     }
   }
 
