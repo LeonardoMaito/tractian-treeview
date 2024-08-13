@@ -36,8 +36,6 @@ class AssetService{
       }
     }
 
-
-
     List<AssetEntity> finalAssets = [
       ...assetModels.where((asset) => asset.parentId == null),
       ...componentModels.where((component) => component.parentId == null),
