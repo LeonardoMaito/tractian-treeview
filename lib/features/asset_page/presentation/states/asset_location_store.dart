@@ -24,6 +24,9 @@ abstract class _AssetLocationStore with Store {
   @observable
   bool filterCriticalStatus = false;
 
+  @observable
+  bool isLoading = false;
+
   @action
   Future<void> loadAssetsAndLocations() async {
     final loadedAssets = await assetLocationService.buildEntityHierarchy();
@@ -50,9 +53,7 @@ abstract class _AssetLocationStore with Store {
     List<BaseEntity> filtered = entities.toList();
 
     if (searchTerm.isNotEmpty) {
-      filtered = filtered.where((entity) {
-        return FilterHelper.searchInEntity(entity, searchTerm);
-      }).toList();
+      filtered = FilterHelper.filterBySearchTerm(filtered, searchTerm);
     }
 
     if (filterEnergySensors) {

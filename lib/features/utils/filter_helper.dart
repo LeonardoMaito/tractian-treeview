@@ -2,7 +2,6 @@ import 'package:treeview/features/asset_page/domain/entities/base_entity.dart';
 import 'package:treeview/features/asset_page/domain/models/assets/asset_model.dart';
 import 'package:treeview/features/asset_page/domain/models/location/location_model.dart';
 import 'package:treeview/features/asset_page/domain/models/assets/component_model.dart';
-
 import '../asset_page/domain/entities/asset_entity.dart';
 
 class FilterHelper {
@@ -28,24 +27,66 @@ class FilterHelper {
     }
   }
 
-  static bool searchInEntity(BaseEntity entity, String term) {
-    bool matches = entity.name.toLowerCase().contains(term.toLowerCase());
+  static List<BaseEntity> filterBySearchTerm(List<BaseEntity> entities, String searchTerm) {
+    return entities.expand((entity) {
+      return _filterEntityBySearchTerm(entity, searchTerm);
+    }).toList();
+  }
+
+  static List<BaseEntity> _filterEntityBySearchTerm(BaseEntity entity, String searchTerm) {
+    bool matches = entity.name.toLowerCase().contains(searchTerm.toLowerCase());
 
     if (entity is LocationModel) {
-      bool subLocationsMatch = entity.subLocations.any((subLocation) => searchInEntity(subLocation, term));
-      bool assetsMatch = entity.assets.any((asset) => searchInEntity(asset, term));
+      List<LocationModel> matchingSubLocations = entity.subLocations
+          .expand((subLocation) => _filterEntityBySearchTerm(subLocation, searchTerm))
+          .cast<LocationModel>()
+          .toList();
 
-      return matches || subLocationsMatch || assetsMatch;
+      List<AssetEntity> matchingAssets = entity.assets
+          .expand((asset) => _filterEntityBySearchTerm(asset, searchTerm))
+          .cast<AssetEntity>()
+          .toList();
+
+      if (matches || matchingSubLocations.isNotEmpty || matchingAssets.isNotEmpty) {
+        return [
+          LocationModel(
+            id: entity.id,
+            name: entity.name,
+            parentId: entity.parentId,
+            subLocations: matchingSubLocations,
+            assets: matchingAssets,
+          )
+        ];
+      }
+    } else if (entity is AssetModel) {
+      List<AssetModel> matchingSubAssets = entity.subAssets
+          .expand((subAsset) => _filterEntityBySearchTerm(subAsset, searchTerm))
+          .cast<AssetModel>()
+          .toList();
+
+      List<ComponentModel> matchingComponents = entity.components
+          .where((component) => component.name.toLowerCase().contains(searchTerm.toLowerCase()))
+          .toList();
+
+      if (matches || matchingSubAssets.isNotEmpty || matchingComponents.isNotEmpty) {
+        return [
+          AssetModel(
+            id: entity.id,
+            name: entity.name,
+            parentId: entity.parentId,
+            locationId: entity.locationId,
+            subAssets: matchingSubAssets,
+            components: matchingComponents,
+          )
+        ];
+      }
+    } else if (entity is ComponentModel) {
+      if (matches) {
+        return [entity];
+      }
     }
 
-    if (entity is AssetModel) {
-      bool subAssetsMatch = entity.subAssets.any((subAsset) => searchInEntity(subAsset, term));
-      bool componentsMatch = entity.components.any((component) => component.name.toLowerCase().contains(term.toLowerCase()));
-
-      return matches || subAssetsMatch || componentsMatch;
-    }
-
-    return matches;
+    return <BaseEntity>[];
   }
 
   static List<BaseEntity> filterByEnergySensor(List<BaseEntity> entities) {
