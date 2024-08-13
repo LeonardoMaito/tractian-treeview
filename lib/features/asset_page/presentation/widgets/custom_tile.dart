@@ -5,13 +5,17 @@ class CustomExpansionTile extends StatefulWidget {
   final String title;
   final List<Widget> children;
   final bool initiallyExpanded;
+  final bool expandable;
+  final List<Widget>? additionalIcons;
 
   const CustomExpansionTile({
     super.key,
     required this.leading,
     required this.title,
-    required this.children,
+    this.children = const [],
     this.initiallyExpanded = false,
+    this.expandable = true,
+    this.additionalIcons,
   });
 
   @override
@@ -28,9 +32,11 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
   }
 
   void _toggleExpansion() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-    });
+    if (widget.expandable) {
+      setState(() {
+        _isExpanded = !_isExpanded;
+      });
+    }
   }
 
   @override
@@ -43,20 +49,30 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
             onTap: _toggleExpansion,
             child: Row(
               children: [
-                if(widget.children.isNotEmpty)
-                Icon(
-                  _isExpanded ? Icons.expand_less : Icons.expand_more,
-                ),
+                if (widget.expandable && widget.children.isNotEmpty)
+                  Icon(
+                    _isExpanded ? Icons.expand_less : Icons.expand_more,
+                  )
+                else
+                  const SizedBox(
+                    width: 24.0, // Mesma largura do ícone de expansão
+                  ),
                 const SizedBox(width: 8.0),
                 widget.leading,
                 const SizedBox(width: 8.0),
-                Expanded(child: Text(widget.title, style: TextStyle(fontSize: 16),)),
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+                if (widget.additionalIcons != null) ...widget.additionalIcons!,
               ],
             ),
           ),
-          if (_isExpanded)
+          if (_isExpanded && widget.expandable)
             Padding(
-              padding: const EdgeInsets.only(left: 10.0),
+              padding: const EdgeInsets.only(left: 10.0), // Indentação maior para filhos
               child: Column(children: widget.children),
             ),
         ],
