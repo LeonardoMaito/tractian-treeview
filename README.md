@@ -28,7 +28,7 @@ Dependency injection is done by using the [GetIt](https://pub.dev/packages/get_i
 
 ```bash
 # Clone repository
-$ git clone [https://github.com/LeonardoMaito/tractian-treeview.git](https://github.com/LeonardoMaito/tractian-treeview.git)
+$ git clone https://github.com/LeonardoMaito/tractian-treeview.git
 
 # Install the dependencies
 $ flutter pub get
