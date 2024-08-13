@@ -19,6 +19,12 @@ class CustomTheme{
               borderRadius: BorderRadius.all(Radius.circular(5)),
             ),
           ),
-        )),
+        ),
+    ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      circularTrackColor: Colors.white,
+      color: Color(0xFF17192d)
+
+    )
   );
 }
