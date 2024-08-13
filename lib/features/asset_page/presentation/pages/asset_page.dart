@@ -90,6 +90,9 @@ class _AssetPageState extends State<AssetPage> {
                 height: 700,
                 child: Observer(
                   builder: (_) {
+                    if (assetLocationStore.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
                       return ListView.builder(
                         itemCount: assetLocationStore.filteredEntities.length,
                         itemBuilder: (context, index) {
