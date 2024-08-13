@@ -35,14 +35,23 @@ void main() {
         assets: [asset],
       );
 
-      var hasEnergy = FilterHelper.hasEnergySensor(location);
+      var filteredEntities = FilterHelper.filterByEnergySensor([location]);
 
-      expect(hasEnergy, isTrue);
-      expect(location.assets.length, 1);
+      expect(filteredEntities.length, 1);
+      expect(filteredEntities.first is LocationModel, isTrue);
+
+      var filteredLocation = filteredEntities.first as LocationModel;
+
+      expect(filteredLocation.assets.length, 1);
+      expect(filteredLocation.assets.first is AssetModel, isTrue);
+
+      var filteredAsset = filteredLocation.assets.first as AssetModel;
+
+      expect(filteredAsset.components.length, 1);
+      expect(filteredAsset.components.first.sensorType, ComponentType.energy);
     });
 
     test('should filter and include only critical status components within LocationModel', () {
-      // Arrange
       var criticalComponent = ComponentModel(
         id: '1',
         name: 'Critical Sensor',
@@ -71,13 +80,23 @@ void main() {
         assets: [asset],
       );
 
-      var hasCritical = FilterHelper.hasCriticalStatus(location);
+      var filteredEntities = FilterHelper.filterByCriticalStatus([location]);
 
-      expect(hasCritical, isTrue);
-      expect(location.assets.length, 1);
+      expect(filteredEntities.length, 1);
+      expect(filteredEntities.first is LocationModel, isTrue);
+
+      var filteredLocation = filteredEntities.first as LocationModel;
+
+      expect(filteredLocation.assets.length, 1);
+      expect(filteredLocation.assets.first is AssetModel, isTrue);
+
+      var filteredAsset = filteredLocation.assets.first as AssetModel;
+
+      expect(filteredAsset.components.length, 1);
+      expect(filteredAsset.components.first.status, ComponentStatus.alert);
     });
 
-    test('should return false if no energy sensors exist in LocationModel', () {
+    test('should return empty list if no energy sensors exist in LocationModel', () {
       var vibrationComponent = ComponentModel(
         id: '1',
         name: 'Vibration Sensor',
@@ -99,12 +118,12 @@ void main() {
         assets: [asset],
       );
 
-      var hasEnergy = FilterHelper.hasEnergySensor(location);
+      var filteredEntities = FilterHelper.filterByEnergySensor([location]);
 
-      expect(hasEnergy, isFalse);
+      expect(filteredEntities.isEmpty, isTrue);
     });
 
-    test('should return false if no critical status components exist in LocationModel', () {
+    test('should return empty list if no critical status components exist in LocationModel', () {
       var normalComponent = ComponentModel(
         id: '1',
         name: 'Normal Sensor',
@@ -126,9 +145,9 @@ void main() {
         assets: [asset],
       );
 
-      var hasCritical = FilterHelper.hasCriticalStatus(location);
+      var filteredEntities = FilterHelper.filterByCriticalStatus([location]);
 
-      expect(hasCritical, isFalse);
+      expect(filteredEntities.isEmpty, isTrue);
     });
   });
 }
