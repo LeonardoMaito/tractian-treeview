@@ -4,13 +4,12 @@ import 'package:treeview/features/asset_page/domain/models/location/location_mod
 import 'package:treeview/features/asset_page/domain/models/assets/component_model.dart';
 
 class FilterHelper {
-
   static List<BaseEntity> includeParentEntities(List<BaseEntity> filteredEntities, List<BaseEntity> allEntities) {
     Set<BaseEntity> entitiesWithParents = filteredEntities.toSet();
 
     for (var entity in filteredEntities) {
       var parent = _findParentEntity(entity, allEntities);
-      while (parent != null) {
+      while (parent != null && !entitiesWithParents.contains(parent)) {
         entitiesWithParents.add(parent);
         parent = _findParentEntity(parent, allEntities);
       }
@@ -28,56 +27,71 @@ class FilterHelper {
   }
 
   static bool searchInEntity(BaseEntity entity, String term) {
-    if (entity.name.toLowerCase().contains(term.toLowerCase())) {
-      return true;
-    }
+    bool matches = entity.name.toLowerCase().contains(term.toLowerCase());
 
     if (entity is LocationModel) {
-      return entity.subLocations.any((subLocation) => searchInEntity(subLocation, term)) ||
-          entity.assets.any((asset) => searchInEntity(asset, term));
+      // Verifica se qualquer sublocation ou asset corresponde ao termo de busca
+      bool subLocationsMatch = entity.subLocations.any((subLocation) => searchInEntity(subLocation, term));
+      bool assetsMatch = entity.assets.any((asset) => searchInEntity(asset, term));
+
+      return matches || subLocationsMatch || assetsMatch;
     }
 
     if (entity is AssetModel) {
-      return entity.subAssets.any((subAsset) => searchInEntity(subAsset, term)) ||
-          entity.components.any((component) => component.name.toLowerCase().contains(term.toLowerCase()));
+      // Verifica se qualquer sub-asset ou componente corresponde ao termo de busca
+      bool subAssetsMatch = entity.subAssets.any((subAsset) => searchInEntity(subAsset, term));
+      bool componentsMatch = entity.components.any((component) => component.name.toLowerCase().contains(term.toLowerCase()));
+
+      return matches || subAssetsMatch || componentsMatch;
     }
 
-    return false;
+    return matches;
   }
 
   static bool hasEnergySensor(BaseEntity entity) {
-    if (entity is ComponentModel && entity.sensorType == ComponentType.energy) {
-      return true;
-    }
+    if (entity is ComponentModel) {
+      return entity.sensorType == ComponentType.energy;
+    } else if (entity is AssetModel) {
+      // Filtra apenas os sub-ativos e componentes que são de energia
+      entity.subAssets = entity.subAssets.where((subAsset) => hasEnergySensor(subAsset)).toList();
+      entity.components = entity.components.where((component) => component.sensorType == ComponentType.energy).toList();
 
-    if (entity is LocationModel) {
-      return entity.subLocations.any(hasEnergySensor) ||
-          entity.assets.any(hasEnergySensor);
-    }
+      return entity.subAssets.isNotEmpty || entity.components.isNotEmpty;
+    } else if (entity is LocationModel) {
+      // Filtra apenas as sub-localizações e ativos que contêm componentes de energia
+      entity.subLocations = entity.subLocations.where((subLocation) => hasEnergySensor(subLocation)).toList();
+      entity.assets = entity.assets.where((asset) => hasEnergySensor(asset)).toList();
 
-    if (entity is AssetModel) {
-      return entity.components.any((component) => component.sensorType == ComponentType.energy) ||
-          entity.subAssets.any(hasEnergySensor);
+      return entity.subLocations.isNotEmpty || entity.assets.isNotEmpty;
     }
-
     return false;
   }
 
   static bool hasCriticalStatus(BaseEntity entity) {
-    if (entity is ComponentModel && entity.status == ComponentStatus.alert) {
-      return true;
-    }
+    if (entity is ComponentModel) {
+      return entity.status == ComponentStatus.alert;
+    } else if (entity is AssetModel) {
+      // Filtra apenas os sub-ativos e componentes que têm status crítico
+      entity.subAssets = entity.subAssets.where((subAsset) => hasCriticalStatus(subAsset)).toList();
+      entity.components = entity.components.where((component) => component.status == ComponentStatus.alert).toList();
 
+      return entity.subAssets.isNotEmpty || entity.components.isNotEmpty;
+    } else if (entity is LocationModel) {
+      // Filtra apenas as sub-localizações e ativos que contêm componentes com status crítico
+      entity.subLocations = entity.subLocations.where((subLocation) => hasCriticalStatus(subLocation)).toList();
+      entity.assets = entity.assets.where((asset) => hasCriticalStatus(asset)).toList();
+
+      return entity.subLocations.isNotEmpty || entity.assets.isNotEmpty;
+    }
+    return false;
+  }
+
+  static bool hasChildren(BaseEntity entity) {
     if (entity is LocationModel) {
-      return entity.subLocations.any(hasCriticalStatus) ||
-          entity.assets.any(hasCriticalStatus);
+      return entity.subLocations.isNotEmpty || entity.assets.isNotEmpty;
+    } else if (entity is AssetModel) {
+      return entity.subAssets.isNotEmpty || entity.components.isNotEmpty;
     }
-
-    if (entity is AssetModel) {
-      return entity.components.any((component) => component.status == ComponentStatus.alert) ||
-          entity.subAssets.any(hasCriticalStatus);
-    }
-
     return false;
   }
 }
