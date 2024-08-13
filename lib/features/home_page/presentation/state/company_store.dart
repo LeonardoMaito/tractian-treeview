@@ -1,5 +1,4 @@
 import 'package:mobx/mobx.dart';
-import 'package:treeview/features/home_page/data/repository/company_repository_impl.dart';
 import 'package:treeview/features/home_page/domain/models/company_model.dart';
 import 'package:treeview/features/home_page/domain/repository/company_repository.dart';
 
