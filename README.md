@@ -46,8 +46,6 @@ Tools • Dart 3.4.3 • DevTools 2.34.3
 
 ## 📷 Screenshots
 
-## 📷 Screenshots
-
 <img src="https://github.com/user-attachments/assets/3d676a49-7d0b-42d9-aa7a-910a2540d434" alt="Tractian1" width="300"/>
 <img src="https://github.com/user-attachments/assets/96d4fdda-0b54-4be6-b6fd-f177b4682a82" alt="Tractian2" width="300"/>
 <img src="https://github.com/user-attachments/assets/f0264622-ff1c-4197-90ab-3f14c0da01df" alt="Tractian3" width="300"/>
