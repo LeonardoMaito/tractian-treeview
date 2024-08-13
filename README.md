@@ -39,7 +39,7 @@ $ flutter pub run build_runner build
 #Run the project
 $ flutter run
 ```
-## ℹ️Additional Info
+## ℹ️ Additional Info
 Flutter: 3.22.2 • channel stable
 
 Tools • Dart 3.4.3 • DevTools 2.34.3
