@@ -71,7 +71,7 @@ class _AssetPageState extends State<AssetPage> {
                           text: 'Sensor de Energia')),
                   const SizedBox(width: 15),
                   Flexible(
-                      flex: 0,
+                      flex: 1,
                       child: FilterButton(
                           onPressed: () {
                             assetLocationStore.toggleCriticalStatusFilter();
