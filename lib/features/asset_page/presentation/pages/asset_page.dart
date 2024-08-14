@@ -47,7 +47,7 @@ class _AssetPageState extends State<AssetPage> {
     return Scaffold(
       appBar: const CustomAppBar(),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        padding: const EdgeInsets.only(left: 15.0, right: 15, top: 15),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
