@@ -34,7 +34,10 @@ class FilterHelper {
   }
 
   static List<BaseEntity> _filterEntityBySearchTerm(BaseEntity entity, String searchTerm) {
-    bool matches = entity.name.toLowerCase().contains(searchTerm.toLowerCase());
+    final searchPattern = RegExp(r'\b' + RegExp.escape(searchTerm), caseSensitive: false);
+
+    // Verificar se a entidade corresponde ao padrão
+    bool matches = searchPattern.hasMatch(entity.name);
 
     if (entity is LocationModel) {
       List<LocationModel> matchingSubLocations = entity.subLocations
@@ -47,14 +50,15 @@ class FilterHelper {
           .cast<AssetEntity>()
           .toList();
 
+      // Mantém todos os filhos se o parent combinar com o termo de busca
       if (matches || matchingSubLocations.isNotEmpty || matchingAssets.isNotEmpty) {
         return [
           LocationModel(
             id: entity.id,
             name: entity.name,
             parentId: entity.parentId,
-            subLocations: matchingSubLocations,
-            assets: matchingAssets,
+            subLocations: matches ? entity.subLocations : matchingSubLocations,
+            assets: matches ? entity.assets : matchingAssets,
           )
         ];
       }
@@ -68,6 +72,7 @@ class FilterHelper {
           .where((component) => component.name.toLowerCase().contains(searchTerm.toLowerCase()))
           .toList();
 
+      // Mantém todos os filhos se o parent combinar com o termo de busca
       if (matches || matchingSubAssets.isNotEmpty || matchingComponents.isNotEmpty) {
         return [
           AssetModel(
@@ -75,8 +80,8 @@ class FilterHelper {
             name: entity.name,
             parentId: entity.parentId,
             locationId: entity.locationId,
-            subAssets: matchingSubAssets,
-            components: matchingComponents,
+            subAssets: matches ? entity.subAssets : matchingSubAssets,
+            components: matches ? entity.components : matchingComponents,
           )
         ];
       }
